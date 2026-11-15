@@ -1,0 +1,39 @@
+name: publicos_web3_bridge
+description: >-
+  The website-to-wallet bridge shared by the PublicOS clients: the EIP-1193
+  provider, its request dispatch, the connect-grant gate and the signing path.
+  Engine-agnostic and UI-agnostic by design -- it owns no widgets.
+version: 0.1.0
+repository: https://github.com/PublicOS-dev/publicos_web3_bridge
+
+# Client-layer and PublicOS-specific: it knows the PublicOS grant table, chain
+# and consent model. Consumed from git, not from pub.dev.
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # NO publicos_core. The flow is webview <-> app <-> core: the app resolves
+  # keys and grants and hands them down through WalletBinding / GrantStore.
+  # Core has no opinion about the website-to-wallet flow and should never be
+  # dragged into it. Keeping this package Core-free also makes the whole
+  # dispatch testable with fakes -- no keychain, no database, no device.
+
+  http: ^1.2.2
+  # keccak256 for EIP-712. The client reaches it through publicos_core; this
+  # package takes it from the same place web3dart does -- pointycastle's
+  # KeccakDigest(256) -- rather than importing Core.
+  pointycastle: ^4.0.0
+  web3dart: ^3.0.2
+  wallet: ^0.0.18
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
